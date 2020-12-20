@@ -1,0 +1,3 @@
+${PODS_ROOT}/Target Support Files/Pods-EasyMQTTKit-EasyMQTTKitTests/Pods-EasyMQTTKit-EasyMQTTKitTests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/CocoaAsyncSocket/CocoaAsyncSocket.framework
+${BUILT_PRODUCTS_DIR}/CocoaMQTT/CocoaMQTT.framework
