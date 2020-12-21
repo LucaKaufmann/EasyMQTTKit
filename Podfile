@@ -6,7 +6,9 @@ target 'EasyMQTTKit' do
   use_frameworks!
 
   # Pods for EasyMQTTKit
-  pod 'CocoaMQTT'	
+  pod 'CocoaMQTT'
+  pod 'SwiftyJSON'
+
   target 'EasyMQTTKitTests' do
     # Pods for testing
   end

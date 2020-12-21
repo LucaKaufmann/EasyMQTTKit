@@ -2,19 +2,23 @@ PODS:
   - CocoaAsyncSocket (7.6.4)
   - CocoaMQTT (1.2.5):
     - CocoaAsyncSocket (~> 7.6.3)
+  - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
   - CocoaMQTT
+  - SwiftyJSON
 
 SPEC REPOS:
   trunk:
     - CocoaAsyncSocket
     - CocoaMQTT
+    - SwiftyJSON
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   CocoaMQTT: a61490ed3b328011c5d75169a77781983e2bb221
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: cb9137f16fb0493c718ea09dbdb19cf0f17980d7
+PODFILE CHECKSUM: 3b36fb38f7f461e034cb8146d6417ffbdbc032f6
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.9.1
