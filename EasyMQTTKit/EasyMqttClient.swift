@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import os.log
 import CocoaMQTT
+import os.log
 import Combine
 
 public let sharedMqttClient = EasyMqttClient()
@@ -31,7 +31,7 @@ public class EasyMqttClient: ObservableObject {
     var mqtt: CocoaMQTT?
     @Published public var messageBufferSize = 10
     @Published public private(set) var subscribedTopics = [String]()
-    @Published public var messageBuffer = [MQTTMessageModel]()
+    @Published public var messageBuffer = [MQTTMessage]()
     @Published public var isSubscribed = false
     @Published public var isConnected = false
     @Published public var connectState: ConnectState = .disconnected
@@ -84,7 +84,7 @@ public class EasyMqttClient: ObservableObject {
             return
         }
 
-        self.messageBuffer = [MQTTMessageModel]()
+        self.messageBuffer = [MQTTMessage]()
 //        if (username != "") {
 //            mqtt?.username = username
 //            mqtt?.password = password
@@ -99,6 +99,22 @@ public class EasyMqttClient: ObservableObject {
         
         mqtt?.connect(timeout: 5)
         setBroker(ip: ipAddress, username: username, port: port, enableTls: enableTls)
+    }
+    
+    public func backgroundConnect(username: String, password: String, ipAddress: String, port: String, enableTls: Bool = false, clientId: String = "EasyMQTT-\(UIDevice.current.name)-shortcut") -> CocoaMQTT {
+        
+        print("Creating new mqtt client with saved credentials")
+        let mqtt = CocoaMQTT(clientID: clientId, host: ipAddress, port: UInt16(port) ?? 1883)
+        mqtt.delegate = self
+        mqtt.enableSSL = enableTls
+        mqtt.allowUntrustCACertificate = true
+        
+        mqtt.username = username
+        mqtt.password = password
+        
+        mqtt.connect(timeout: 5)
+        
+        return mqtt
     }
     
     public func disconnect() {
@@ -136,75 +152,86 @@ public class EasyMqttClient: ObservableObject {
     }
     
     public func publishFromBackground(topic: String, payload: String, username: String, password: String, ipAddress: String, port: String, enableTls: Bool, completion: @escaping (Bool) -> Void) {
-        if mqtt == nil {
-            self.connect(username: username, password: password, ipAddress: ipAddress, port: port, enableTls: enableTls)
-        }
         
-        guard let client = mqtt else {
-            print("Error initializing client")
-            return
-        }
+//        guard let client = mqtt else {
+//            print("Error initializing client")
+//            completion(false)
+//            return
+//        }
+        
+        let client = self.backgroundConnect(username: username, password: password, ipAddress: ipAddress, port: port, enableTls: enableTls)
+        
+        var delayWorkItem: DispatchWorkItem?
         let message = CocoaMQTTMessage(topic: topic, string: payload, qos: .qos1, retained: false, dup: false)
         if client.connState == .connected {
             print("Sending message \(message)")
             client.publish(message)
             completion(true)
+            delayWorkItem?.cancel()
             return
         }
+        
         client.didChangeState = { mqtt, state in
             if state == .connected {
                 print("Sending message \(message)")
                 client.publish(message)
+                delayWorkItem?.cancel()
                 completion(true)
                 return
             }
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { // Change `2.0` to the desired number of seconds.
+        
+        delayWorkItem = DispatchWorkItem {
             if client.connState != .connected {
+                client.disconnect()
                 completion(false)
             }
         }
+        //we just created the work item, it is safe to force unwrap in this situation
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10, execute: delayWorkItem!)
     }
     
-    public func subscribeFromBackground(topic: String) {
-        let broker = MqttBroker(name: "Default", ip: "192.168.92.21", port: "1883", username: "mqtt", password: "gSkeJD3NHATS", enableTls: false)
+    public func subscribeFromBackground(topic: String, username: String, password: String, ipAddress: String, port: String, enableTls: Bool, widget: Bool = false, completion: @escaping (MQTTMessage?) -> Void) {
+
         
-        self.subscribeFromBackground(topic: topic, username: broker.username, password: broker.password, ipAddress: broker.ip, port: broker.port, enableTls: broker.enableTls, completion: { message in
-            print(message)
-        })
-    }
-    
-    public func subscribeFromBackground(topic: String, username: String, password: String, ipAddress: String, port: String, enableTls: Bool, completion: @escaping (MQTTMessageModel?) -> Void) {
+        let client = self.backgroundConnect(username: username, password: password, ipAddress: ipAddress, port: port, enableTls: enableTls, clientId: (widget ? "\(clientID)-\(topic.sanitized())" : "\(clientID)-shortcut"))
         
-        mqtt = CocoaMQTT(clientID: clientID, host: ipAddress, port: UInt16(port) ?? 1883)
-        mqtt?.username = username
-        mqtt?.password = password
-        mqtt?.connect()
-        mqtt?.enableSSL = enableTls
-        mqtt?.delegate = self
+        var messageReceived = false
         
-        mqtt?.didReceiveMessage = { mqtt, message, qos in
-            print("Receive message")
-            completion(self.createMessage(message))
+        var delayWorkItem: DispatchWorkItem?
+        client.didReceiveMessage = { mqttClient, message, qos in
+            if !messageReceived {
+                print("Receive message")
+                messageReceived = true
+                client.disconnect()
+                delayWorkItem?.cancel()
+                
+                completion(self.createMessage(message))
+            }
             return
         }
         
-        if mqtt?.connState == .connected {
-            print("Subscriving to topic")
-            mqtt?.subscribe(topic)
+        if client.connState == .connected {
+            print("Subscribing to topic")
+            client.subscribe(topic)
         }
-        mqtt?.didChangeState = { mqtt, state in
+        client.didChangeState = { mqtt, state in
             if state == .connected {
-                print("Subscriving to topic")
-                self.mqtt?.subscribe(topic)
+                print("Subscribing to topic")
+                client.subscribe(topic)
             }
         }
         
-        // 5 second timeout
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10.0) {
-            completion(nil)
-            return
-        }
+//        delayWorkItem = DispatchWorkItem {
+//            client.disconnect()
+//            completion(nil)
+//        }
+//        //we just created the work item, it is safe to force unwrap in this situation
+//        var timeout = DispatchTime.now() + 5
+//        if widget {
+//            timeout = timeout + 5
+//        }
+//        DispatchQueue.main.asyncAfter(deadline: timeout, execute: delayWorkItem!)
     }
     
     public func subscribe(topic: String) {
@@ -427,6 +454,7 @@ extension EasyMqttClient {
 extension EasyMqttClient {
     func appendMessage(message: CocoaMQTTMessage) {
         let newMessage = createMessage(message)
+
         DispatchQueue.main.async {
             self.messageBuffer.insert(newMessage, at: 0)
             
@@ -492,7 +520,7 @@ extension CocoaMQTTMessage {
 }
 
 extension EasyMqttClient {
-    fileprivate func createMessage(_ message: CocoaMQTTMessage) -> MQTTMessageModel {
+    fileprivate func createMessage(_ message: CocoaMQTTMessage) -> MQTTMessage {
         var qos: MQTTQOS = MQTTQOS.qos0
         switch message.qos {
         case .qos0:
@@ -502,7 +530,7 @@ extension EasyMqttClient {
         case .qos2:
             qos = MQTTQOS.qos2
         }
-        let newMessage = MQTTMessageModel(topic: message.topic,
+        let newMessage = MQTTMessage(topic: message.topic,
                                           string: message.string ?? "",
                                           qos: qos,
                                           retained: message.retained,

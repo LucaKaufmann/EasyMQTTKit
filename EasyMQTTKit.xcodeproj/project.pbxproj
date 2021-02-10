@@ -32,6 +32,14 @@
 		6837141D258F34E500305CB0 /* EasyMqttClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68371416258F34E500305CB0 /* EasyMqttClient.swift */; };
 		68371475258F398400305CB0 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68371474258F398400305CB0 /* Storage.swift */; };
 		68371479258F39CB00305CB0 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68371478258F39CB00305CB0 /* Constants.swift */; };
+		81C7257925D4772700FEC0C1 /* Multimap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7256F25D4772700FEC0C1 /* Multimap.swift */; };
+		81C7257A25D4772700FEC0C1 /* DiagramPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257125D4772700FEC0C1 /* DiagramPath.swift */; };
+		81C7257B25D4772700FEC0C1 /* TimeSeriesValueUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257225D4772700FEC0C1 /* TimeSeriesValueUtil.swift */; };
+		81C7257C25D4772700FEC0C1 /* TimeSeriesValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257325D4772700FEC0C1 /* TimeSeriesValue.swift */; };
+		81C7257D25D4772700FEC0C1 /* TimeSeriesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257425D4772700FEC0C1 /* TimeSeriesModel.swift */; };
+		81C7257E25D4772700FEC0C1 /* MQTTMessageModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257525D4772700FEC0C1 /* MQTTMessageModel.swift */; };
+		81C7257F25D4772700FEC0C1 /* StringUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257725D4772700FEC0C1 /* StringUtils.swift */; };
+		81C7258025D4772700FEC0C1 /* String+prefix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81C7257825D4772700FEC0C1 /* String+prefix.swift */; };
 		AC4D252B566878DD366ED914 /* Pods_EasyMQTTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C9C2ADDCB4B4CA256382B165 /* Pods_EasyMQTTKit.framework */; };
 /* End PBXBuildFile section */
 
@@ -62,6 +70,14 @@
 		68371474258F398400305CB0 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		68371478258F39CB00305CB0 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		6942F407A61B1B3C5ED397DF /* Pods-EasyMQTTKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyMQTTKit.release.xcconfig"; path = "Target Support Files/Pods-EasyMQTTKit/Pods-EasyMQTTKit.release.xcconfig"; sourceTree = "<group>"; };
+		81C7256F25D4772700FEC0C1 /* Multimap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Multimap.swift; sourceTree = "<group>"; };
+		81C7257125D4772700FEC0C1 /* DiagramPath.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiagramPath.swift; sourceTree = "<group>"; };
+		81C7257225D4772700FEC0C1 /* TimeSeriesValueUtil.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSeriesValueUtil.swift; sourceTree = "<group>"; };
+		81C7257325D4772700FEC0C1 /* TimeSeriesValue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSeriesValue.swift; sourceTree = "<group>"; };
+		81C7257425D4772700FEC0C1 /* TimeSeriesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSeriesModel.swift; sourceTree = "<group>"; };
+		81C7257525D4772700FEC0C1 /* MQTTMessageModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MQTTMessageModel.swift; sourceTree = "<group>"; };
+		81C7257725D4772700FEC0C1 /* StringUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringUtils.swift; sourceTree = "<group>"; };
+		81C7257825D4772700FEC0C1 /* String+prefix.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+prefix.swift"; sourceTree = "<group>"; };
 		85EEDECA78F30861C073DE01 /* Pods-EasyMQTTKit-EasyMQTTKitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyMQTTKit-EasyMQTTKitTests.release.xcconfig"; path = "Target Support Files/Pods-EasyMQTTKit-EasyMQTTKitTests/Pods-EasyMQTTKit-EasyMQTTKitTests.release.xcconfig"; sourceTree = "<group>"; };
 		C9C2ADDCB4B4CA256382B165 /* Pods_EasyMQTTKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_EasyMQTTKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC771BA156D71088A7D825A8 /* Pods-EasyMQTTKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-EasyMQTTKit.debug.xcconfig"; path = "Target Support Files/Pods-EasyMQTTKit/Pods-EasyMQTTKit.debug.xcconfig"; sourceTree = "<group>"; };
@@ -120,6 +136,8 @@
 		683713F6258F34B600305CB0 /* EasyMQTTKit */ = {
 			isa = PBXGroup;
 			children = (
+				81C7257625D4772700FEC0C1 /* Extensions */,
+				81C7256E25D4772700FEC0C1 /* Models */,
 				68371478258F39CB00305CB0 /* Constants.swift */,
 				68371474258F398400305CB0 /* Storage.swift */,
 				68371416258F34E500305CB0 /* EasyMqttClient.swift */,
@@ -140,6 +158,36 @@
 				68371404258F34B600305CB0 /* Info.plist */,
 			);
 			path = EasyMQTTKitTests;
+			sourceTree = "<group>";
+		};
+		81C7256E25D4772700FEC0C1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				81C7256F25D4772700FEC0C1 /* Multimap.swift */,
+				81C7257025D4772700FEC0C1 /* values */,
+				81C7257525D4772700FEC0C1 /* MQTTMessageModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		81C7257025D4772700FEC0C1 /* values */ = {
+			isa = PBXGroup;
+			children = (
+				81C7257125D4772700FEC0C1 /* DiagramPath.swift */,
+				81C7257225D4772700FEC0C1 /* TimeSeriesValueUtil.swift */,
+				81C7257325D4772700FEC0C1 /* TimeSeriesValue.swift */,
+				81C7257425D4772700FEC0C1 /* TimeSeriesModel.swift */,
+			);
+			path = values;
+			sourceTree = "<group>";
+		};
+		81C7257625D4772700FEC0C1 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				81C7257725D4772700FEC0C1 /* StringUtils.swift */,
+				81C7257825D4772700FEC0C1 /* String+prefix.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		D00F7C193C8E85C0F066175A /* Pods */ = {
@@ -350,9 +398,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				81C7258025D4772700FEC0C1 /* String+prefix.swift in Sources */,
 				6837141D258F34E500305CB0 /* EasyMqttClient.swift in Sources */,
+				81C7257B25D4772700FEC0C1 /* TimeSeriesValueUtil.swift in Sources */,
 				68371417258F34E500305CB0 /* MqttBroker.swift in Sources */,
+				81C7257D25D4772700FEC0C1 /* TimeSeriesModel.swift in Sources */,
+				81C7257E25D4772700FEC0C1 /* MQTTMessageModel.swift in Sources */,
+				81C7257C25D4772700FEC0C1 /* TimeSeriesValue.swift in Sources */,
+				81C7257F25D4772700FEC0C1 /* StringUtils.swift in Sources */,
+				81C7257925D4772700FEC0C1 /* Multimap.swift in Sources */,
 				68371418258F34E500305CB0 /* OSLog+logs.swift in Sources */,
+				81C7257A25D4772700FEC0C1 /* DiagramPath.swift in Sources */,
 				68371419258F34E500305CB0 /* MQTTMessageModel.swift in Sources */,
 				68371479258F39CB00305CB0 /* Constants.swift in Sources */,
 				6837141B258F34E500305CB0 /* PublishMqttMessageModel.swift in Sources */,
