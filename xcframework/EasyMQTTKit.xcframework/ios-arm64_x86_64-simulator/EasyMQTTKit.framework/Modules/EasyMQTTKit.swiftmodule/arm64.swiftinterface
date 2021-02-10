@@ -3,9 +3,12 @@
 // swift-module-flags: -target arm64-apple-ios13.4-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name EasyMQTTKit
 import CocoaMQTT
 import Combine
+import CoreGraphics
 @_exported import EasyMQTTKit
 import Foundation
 import Swift
+import SwiftUI
+import SwiftyJSON
 import os.log
 import os
 public let sharedMqttClient: EasyMQTTKit.EasyMqttClient
@@ -48,12 +51,12 @@ public enum ConnectState {
   public var $subscribedTopics: Combine.Published<[Swift.String]>.Publisher {
     get
   }
-  @Foundation.Published @_projectedValueProperty($messageBuffer) public var messageBuffer: [EasyMQTTKit.MQTTMessageModel] {
+  @Foundation.Published @_projectedValueProperty($messageBuffer) public var messageBuffer: [EasyMQTTKit.MQTTMessage] {
     get
     set
     _modify
   }
-  public var $messageBuffer: Combine.Published<[EasyMQTTKit.MQTTMessageModel]>.Publisher {
+  public var $messageBuffer: Combine.Published<[EasyMQTTKit.MQTTMessage]>.Publisher {
     get
     @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
     set
@@ -102,29 +105,29 @@ public enum ConnectState {
   final public let connectedPublisher: Combine.PassthroughSubject<(Swift.Bool), Swift.Never>
   public func createMqttClient(brokerAddress: Swift.String, brokerPort: Swift.String, enableTls: Swift.Bool)
   public func connect(username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool = false)
+  public func backgroundConnect(username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool = false, clientId: Swift.String = "EasyMQTT-\(UIDevice.current.name)-shortcut") -> CocoaMQTT
   public func disconnect()
   public func backgroundDisconnect()
   public func publish(messageObject: EasyMQTTKit.PublishMqttMessageModel)
   public func publishFromBackground(topic: Swift.String, payload: Swift.String, username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool, completion: @escaping (Swift.Bool) -> Swift.Void)
-  public func subscribeFromBackground(topic: Swift.String)
-  public func subscribeFromBackground(topic: Swift.String, username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool, completion: @escaping (EasyMQTTKit.MQTTMessageModel?) -> Swift.Void)
+  public func subscribeFromBackground(topic: Swift.String, username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool, widget: Swift.Bool = false, completion: @escaping (EasyMQTTKit.MQTTMessage?) -> Swift.Void)
   public func subscribe(topic: Swift.String)
   public func unsubscribeTo(topic: Swift.String)
   @objc deinit
   public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
 }
-extension EasyMqttClient : CocoaMQTT.CocoaMQTTDelegate {
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didUnsubscribeTopic topic: Swift.String)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didConnectAck ack: CocoaMQTT.CocoaMQTTConnAck)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didStateChangeTo state: CocoaMQTT.CocoaMQTTConnState)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didPublishMessage message: CocoaMQTT.CocoaMQTTMessage, id: Swift.UInt16)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didPublishAck id: Swift.UInt16)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didReceiveMessage message: CocoaMQTT.CocoaMQTTMessage, id: Swift.UInt16)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT.CocoaMQTT, didSubscribeTopic topics: [Swift.String])
-  @objc dynamic public func mqttDidPing(_ mqtt: CocoaMQTT.CocoaMQTT)
-  @objc dynamic public func mqttDidReceivePong(_ mqtt: CocoaMQTT.CocoaMQTT)
-  @objc dynamic public func mqttDidDisconnect(_ mqtt: CocoaMQTT.CocoaMQTT, withError err: Swift.Error?)
+extension EasyMqttClient : CocoaMQTTDelegate {
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: Swift.String)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didStateChangeTo state: CocoaMQTTConnState)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topics: [Swift.String])
+  @objc dynamic public func mqttDidPing(_ mqtt: CocoaMQTT)
+  @objc dynamic public func mqttDidReceivePong(_ mqtt: CocoaMQTT)
+  @objc dynamic public func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Swift.Error?)
 }
 extension EasyMqttClient {
   public func changeMessageBufferSize(to size: Swift.Int)
@@ -148,6 +151,63 @@ public struct MqttBroker : Swift.Codable, Swift.Hashable {
   public func hash(into hasher: inout Swift.Hasher)
   public static func == (a: EasyMQTTKit.MqttBroker, b: EasyMQTTKit.MqttBroker) -> Swift.Bool
 }
+public class MQTTMessageModel : Foundation.ObservableObject {
+  @Foundation.Published @_projectedValueProperty($message) public var message: EasyMQTTKit.MQTTMessage {
+    get
+    set
+    _modify
+  }
+  public var $message: Combine.Published<EasyMQTTKit.MQTTMessage>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  public init(message: EasyMQTTKit.MQTTMessage)
+  public func getDiagrams() -> [EasyMQTTKit.DiagramPath]
+  public func hasDiagrams() -> Swift.Bool
+  public func getTimeSeriesLastValue(_ path: EasyMQTTKit.DiagramPath) -> EasyMQTTKit.TimeSeriesValue?
+  public func getTimeSeries(_ path: EasyMQTTKit.DiagramPath) -> [EasyMQTTKit.TimeSeriesValue]
+  public func getTimeSeriesId(_ path: EasyMQTTKit.DiagramPath) -> [EasyMQTTKit.TimeSeriesValue]
+  @objc deinit
+  public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
+}
+extension MQTTMessageModel {
+  public func extractPayload(for path: Swift.String?) -> Swift.String
+}
+public class TimeSeriesValue : Swift.Hashable, Swift.Identifiable {
+  final public let value: Swift.AnyHashable
+  final public let valueString: Swift.String
+  final public let date: Foundation.Date
+  final public let dateString: Swift.String
+  public init(value: Swift.AnyHashable, at date: Foundation.Date, dateFormatted: Swift.String)
+  public static func == (lhs: EasyMQTTKit.TimeSeriesValue, rhs: EasyMQTTKit.TimeSeriesValue) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  @objc deinit
+  public var hashValue: Swift.Int {
+    get
+  }
+  public typealias ID = Swift.ObjectIdentifier
+}
+public class DiagramPath : Swift.Hashable, Swift.Identifiable {
+  final public let path: Swift.String
+  public var lastSegment: Swift.String {
+    get
+  }
+  public var parentPath: Swift.String {
+    get
+  }
+  public var hasSubpath: Swift.Bool {
+    get
+  }
+  public init(_ path: Swift.String)
+  public static func == (lhs: EasyMQTTKit.DiagramPath, rhs: EasyMQTTKit.DiagramPath) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  @objc deinit
+  public var hashValue: Swift.Int {
+    get
+  }
+  public typealias ID = Swift.ObjectIdentifier
+}
 public enum MQTTQOS : Swift.UInt8, Swift.CustomStringConvertible {
   case qos0
   case qos1
@@ -161,7 +221,8 @@ public enum MQTTQOS : Swift.UInt8, Swift.CustomStringConvertible {
     get
   }
 }
-public struct MQTTMessageModel : Swift.Identifiable {
+public struct MQTTMessage : Swift.Identifiable {
+  public var jsonData: SwiftyJSON.JSON?
   public var id: Foundation.UUID
   public var qos: EasyMQTTKit.MQTTQOS
   public var dup: Swift.Bool
@@ -169,11 +230,14 @@ public struct MQTTMessageModel : Swift.Identifiable {
   public var payload: Swift.String
   public var retained: Swift.Bool
   public var timestamp: Foundation.Date
-  public var string: Swift.String? {
+  public let localDate: Swift.String
+  public var string: Swift.String {
     get
   }
-  public init(topic: Swift.String, string: Swift.String, qos: EasyMQTTKit.MQTTQOS = .qos0, retained: Swift.Bool = false, dup: Swift.Bool = false)
+  public init(topic: Swift.String, string: Swift.String, date: Foundation.Date = Date(), qos: EasyMQTTKit.MQTTQOS = .qos0, retained: Swift.Bool = false, dup: Swift.Bool = false)
   public init(message: EasyMQTTKit.PublishMqttMessageModel)
+  public func isJson() -> Swift.Bool
+  public func prettyJson() -> Swift.String
   public typealias ID = Foundation.UUID
 }
 public struct PublishMqttMessageModel : Swift.Codable, Swift.Hashable {

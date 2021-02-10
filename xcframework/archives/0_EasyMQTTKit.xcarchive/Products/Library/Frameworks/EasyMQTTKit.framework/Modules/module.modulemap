@@ -1,0 +1,11 @@
+framework module EasyMQTTKit {
+  umbrella header "EasyMQTTKit.h"
+
+  export *
+  module * { export * }
+}
+
+module EasyMQTTKit.Swift {
+    header "EasyMQTTKit-Swift.h"
+    requires objc
+}

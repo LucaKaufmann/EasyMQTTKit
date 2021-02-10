@@ -1,0 +1,184 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target x86_64-apple-ios13.1-macabi -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name CocoaMQTT
+import CocoaAsyncSocket
+@_exported import CocoaMQTT
+import Dispatch
+import Foundation
+import Swift
+@objc public enum CocoaMQTTQOS : Swift.UInt8, Swift.CustomStringConvertible {
+  case qos0 = 0
+  case qos1
+  case qos2
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc public enum CocoaMQTTConnState : Swift.UInt8, Swift.CustomStringConvertible {
+  case initial = 0
+  case connecting
+  case connected
+  case disconnected
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc public enum CocoaMQTTConnAck : Swift.UInt8, Swift.CustomStringConvertible {
+  case accept = 0
+  case unacceptableProtocolVersion
+  case identifierRejected
+  case serverUnavailable
+  case badUsernameOrPassword
+  case notAuthorized
+  case reserved
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+@objc public protocol CocoaMQTTDelegate {
+  @objc func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck)
+  @objc func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: Swift.UInt16)
+  @objc func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: Swift.UInt16)
+  @objc func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: Swift.UInt16)
+  @objc func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topics: [Swift.String])
+  @objc func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: Swift.String)
+  @objc func mqttDidPing(_ mqtt: CocoaMQTT)
+  @objc func mqttDidReceivePong(_ mqtt: CocoaMQTT)
+  @objc func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Swift.Error?)
+  @objc optional func mqtt(_ mqtt: CocoaMQTT, didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
+  @objc optional func mqtt(_ mqtt: CocoaMQTT, didPublishComplete id: Swift.UInt16)
+  @objc optional func mqtt(_ mqtt: CocoaMQTT, didStateChangeTo state: CocoaMQTTConnState)
+}
+@objc public class CocoaMQTT : ObjectiveC.NSObject {
+  weak public var delegate: CocoaMQTTDelegate?
+  public var host: Swift.String
+  public var port: Swift.UInt16
+  public var clientID: Swift.String
+  public var username: Swift.String?
+  public var password: Swift.String?
+  public var cleanSession: Swift.Bool
+  public var willMessage: CocoaMQTTWill?
+  public var backgroundOnSocket: Swift.Bool
+  public var dispatchQueue: Dispatch.DispatchQueue
+  public var connState: CocoaMQTTConnState {
+    get
+    set
+  }
+  public var deliverTimeout: Swift.Double {
+    get
+    set
+  }
+  public var messageQueueSize: Swift.UInt {
+    get
+    set
+  }
+  public var inflightWindowSize: Swift.UInt {
+    get
+    set
+  }
+  public var keepAlive: Swift.UInt16
+  public var autoReconnect: Swift.Bool
+  public var autoReconnectTimeInterval: Swift.UInt16
+  public var maxAutoReconnectTimeInterval: Swift.UInt16
+  public var logLevel: CocoaMQTTLoggerLevel {
+    get
+    set
+  }
+  public var enableSSL: Swift.Bool
+  public var sslSettings: [Swift.String : ObjectiveC.NSObject]?
+  public var allowUntrustCACertificate: Swift.Bool
+  public var subscriptions: [Swift.String : CocoaMQTTQOS]
+  public var didConnectAck: (CocoaMQTT, CocoaMQTTConnAck) -> Swift.Void
+  public var didPublishMessage: (CocoaMQTT, CocoaMQTTMessage, Swift.UInt16) -> Swift.Void
+  public var didPublishAck: (CocoaMQTT, Swift.UInt16) -> Swift.Void
+  public var didReceiveMessage: (CocoaMQTT, CocoaMQTTMessage, Swift.UInt16) -> Swift.Void
+  public var didSubscribeTopic: (CocoaMQTT, [Swift.String]) -> Swift.Void
+  public var didUnsubscribeTopic: (CocoaMQTT, Swift.String) -> Swift.Void
+  public var didPing: (CocoaMQTT) -> Swift.Void
+  public var didReceivePong: (CocoaMQTT) -> Swift.Void
+  public var didDisconnect: (CocoaMQTT, Swift.Error?) -> Swift.Void
+  public var didReceiveTrust: (CocoaMQTT, Security.SecTrust, @escaping (Swift.Bool) -> Swift.Void) -> Swift.Void
+  public var didCompletePublish: (CocoaMQTT, Swift.UInt16) -> Swift.Void
+  public var didChangeState: (CocoaMQTT, CocoaMQTTConnState) -> Swift.Void
+  public init(clientID: Swift.String, host: Swift.String = "localhost", port: Swift.UInt16 = 1883)
+  @objc deinit
+  public func connect() -> Swift.Bool
+  public func connect(timeout: Foundation.TimeInterval) -> Swift.Bool
+  public func disconnect()
+  public func ping()
+  @discardableResult
+  public func publish(_ topic: Swift.String, withString string: Swift.String, qos: CocoaMQTTQOS = .qos1, retained: Swift.Bool = false, dup: Swift.Bool = false) -> Swift.UInt16
+  @discardableResult
+  public func publish(_ message: CocoaMQTTMessage) -> Swift.UInt16
+  @discardableResult
+  public func subscribe(_ topic: Swift.String, qos: CocoaMQTTQOS = .qos1) -> Swift.UInt16
+  @discardableResult
+  public func subscribe(_ topics: [(Swift.String, CocoaMQTTQOS)]) -> Swift.UInt16
+  @discardableResult
+  public func unsubscribe(_ topic: Swift.String) -> Swift.UInt16
+  @objc override dynamic public init()
+}
+extension CocoaMQTT : CocoaAsyncSocket.GCDAsyncSocketDelegate {
+  @objc dynamic public func socket(_ sock: CocoaAsyncSocket.GCDAsyncSocket, didConnectToHost host: Swift.String, port: Swift.UInt16)
+  @objc dynamic public func socket(_ sock: CocoaAsyncSocket.GCDAsyncSocket, didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
+  @objc dynamic public func socketDidSecure(_ sock: CocoaAsyncSocket.GCDAsyncSocket)
+  @objc dynamic public func socket(_ sock: CocoaAsyncSocket.GCDAsyncSocket, didWriteDataWithTag tag: Swift.Int)
+  @objc dynamic public func socket(_ sock: CocoaAsyncSocket.GCDAsyncSocket, didRead data: Foundation.Data, withTag tag: Swift.Int)
+  @objc dynamic public func socketDidDisconnect(_ sock: CocoaAsyncSocket.GCDAsyncSocket, withError err: Swift.Error?)
+}
+public enum CocoaMQTTLoggerLevel : Swift.Int {
+  case debug, info, warning, error, off
+  public typealias RawValue = Swift.Int
+  public init?(rawValue: Swift.Int)
+  public var rawValue: Swift.Int {
+    get
+  }
+}
+@objc public class CocoaMQTTMessage : ObjectiveC.NSObject {
+  public var qos: CocoaMQTTQOS
+  public var dup: Swift.Bool
+  public var topic: Swift.String
+  public var payload: [Swift.UInt8]
+  public var retained: Swift.Bool
+  public var string: Swift.String? {
+    get
+  }
+  public init(topic: Swift.String, string: Swift.String, qos: CocoaMQTTQOS = .qos1, retained: Swift.Bool = false, dup: Swift.Bool = false)
+  public init(topic: Swift.String, payload: [Swift.UInt8], qos: CocoaMQTTQOS = .qos1, retained: Swift.Bool = false, dup: Swift.Bool = false)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc public class CocoaMQTTWill : CocoaMQTTMessage {
+  public init(topic: Swift.String, message: Swift.String)
+  public init(topic: Swift.String, payload: [Swift.UInt8])
+  @objc deinit
+  override public init(topic: Swift.String, string: Swift.String, qos: CocoaMQTTQOS = super, retained: Swift.Bool = super, dup: Swift.Bool = super)
+  override public init(topic: Swift.String, payload: [Swift.UInt8], qos: CocoaMQTTQOS = super, retained: Swift.Bool = super, dup: Swift.Bool = super)
+}
+extension CocoaMQTTQOS : Swift.Equatable {}
+extension CocoaMQTTQOS : Swift.Hashable {}
+extension CocoaMQTTQOS : Swift.RawRepresentable {}
+extension CocoaMQTTConnState : Swift.Equatable {}
+extension CocoaMQTTConnState : Swift.Hashable {}
+extension CocoaMQTTConnState : Swift.RawRepresentable {}
+extension CocoaMQTTConnAck : Swift.Equatable {}
+extension CocoaMQTTConnAck : Swift.Hashable {}
+extension CocoaMQTTConnAck : Swift.RawRepresentable {}
+extension CocoaMQTTLoggerLevel : Swift.Equatable {}
+extension CocoaMQTTLoggerLevel : Swift.Hashable {}
+extension CocoaMQTTLoggerLevel : Swift.RawRepresentable {}
