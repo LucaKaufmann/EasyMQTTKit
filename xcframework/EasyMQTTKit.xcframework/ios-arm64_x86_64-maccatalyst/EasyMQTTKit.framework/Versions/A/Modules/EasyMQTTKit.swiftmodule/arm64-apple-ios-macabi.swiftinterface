@@ -116,23 +116,23 @@ public enum ConnectState {
   @objc deinit
   public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
 }
-extension EasyMqttClient : CocoaMQTTDelegate {
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: Swift.String)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didStateChangeTo state: CocoaMQTTConnState)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: Swift.UInt16)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: Swift.UInt16)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: Swift.UInt16)
-  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topics: [Swift.String])
-  @objc dynamic public func mqttDidPing(_ mqtt: CocoaMQTT)
-  @objc dynamic public func mqttDidReceivePong(_ mqtt: CocoaMQTT)
-  @objc dynamic public func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Swift.Error?)
+extension EasyMqttClient : elegate {
+  @objc dynamic public func mqtt(_ mqtt:  didUnsubscribeTopic topic: Swift.String)
+  @objc dynamic public func mqtt(_ mqtt:  didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
+  @objc dynamic public func mqtt(_ mqtt:  didConnectAck ack: onnAck)
+  @objc dynamic public func mqtt(_ mqtt:  didStateChangeTo state: onnState)
+  @objc dynamic public func mqtt(_ mqtt:  didPublishMessage message: essage, id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt:  didPublishAck id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt:  didReceiveMessage message: essage, id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt:  didSubscribeTopic topics: [Swift.String])
+  @objc dynamic public func mqttDidPing(_ mqtt: 
+  @objc dynamic public func mqttDidReceivePong(_ mqtt: 
+  @objc dynamic public func mqttDidDisconnect(_ mqtt:  withError err: Swift.Error?)
 }
 extension EasyMqttClient {
   public func changeMessageBufferSize(to size: Swift.Int)
 }
-extension CocoaMQTTMessage {
+extension essage {
   convenience public init(message: EasyMQTTKit.PublishMqttMessageModel)
 }
 public struct MqttBroker : Swift.Codable, Swift.Hashable {

@@ -392,7 +392,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nfind ./xcframework -type f -name \"*.swiftinterface\" -print0 | xargs -0 sed -i '' -e  's/CocoaMQTT\\.//'\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\nfind ./xcframework -type f -name \"*.swiftinterface\" -print0 | xargs -0 sed -i '' -e  's/CocoaMQTT\\.//g'\n";
 		};
 		D706BAF80998682914D302B0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

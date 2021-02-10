@@ -24,9 +24,10 @@ platform :ios do
         destinations: ['iOS', 'maccatalyst'],
         xcframework_output_directory: './xcframework'
     )
+    cleanup
   end
 
   lane :cleanup do
-    sh("bash cleanup.sh")
+    sh("find ../xcframework/ -type f -name '*.swiftinterface' -print0 | xargs -0 sed -i '' -e  's/CocoaMQTT\.//g'")
   end
 end
