@@ -28,7 +28,7 @@ public enum ConnectState {
 }
 
 public class EasyMqttClient: ObservableObject {
-    public var mqtt: CocoaMQTT?
+    var mqtt: CocoaMQTT?
     @Published public var messageBufferSize = 10
     @Published public private(set) var subscribedTopics = [String]()
     @Published public var messageBuffer = [MQTTMessageModel]()

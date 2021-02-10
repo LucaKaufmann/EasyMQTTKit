@@ -1,0 +1,202 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.3.2 (swiftlang-1200.0.45 clang-1200.0.32.28)
+// swift-module-flags: -target x86_64-apple-ios13.4-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name EasyMQTTKit
+import CocoaMQTT
+import Combine
+@_exported import EasyMQTTKit
+import Foundation
+import Swift
+import os.log
+import os
+public let sharedMqttClient: EasyMQTTKit.EasyMqttClient
+public enum PublishState {
+  case ready
+  case publishing
+  case error
+  case published
+  public static func == (a: EasyMQTTKit.PublishState, b: EasyMQTTKit.PublishState) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+public enum ConnectState {
+  case connected
+  case connecting
+  case error
+  case disconnected
+  public static func == (a: EasyMQTTKit.ConnectState, b: EasyMQTTKit.ConnectState) -> Swift.Bool
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+}
+@_hasMissingDesignatedInitializers public class EasyMqttClient : Foundation.ObservableObject {
+  @Foundation.Published @_projectedValueProperty($messageBufferSize) public var messageBufferSize: Swift.Int {
+    get
+    set
+    _modify
+  }
+  public var $messageBufferSize: Combine.Published<Swift.Int>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  @Foundation.Published @_projectedValueProperty($subscribedTopics) public var subscribedTopics: [Swift.String] {
+    get
+  }
+  public var $subscribedTopics: Combine.Published<[Swift.String]>.Publisher {
+    get
+  }
+  @Foundation.Published @_projectedValueProperty($messageBuffer) public var messageBuffer: [EasyMQTTKit.MQTTMessageModel] {
+    get
+    set
+    _modify
+  }
+  public var $messageBuffer: Combine.Published<[EasyMQTTKit.MQTTMessageModel]>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  @Foundation.Published @_projectedValueProperty($isSubscribed) public var isSubscribed: Swift.Bool {
+    get
+    set
+    _modify
+  }
+  public var $isSubscribed: Combine.Published<Swift.Bool>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  @Foundation.Published @_projectedValueProperty($isConnected) public var isConnected: Swift.Bool {
+    get
+    set
+    _modify
+  }
+  public var $isConnected: Combine.Published<Swift.Bool>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  @Foundation.Published @_projectedValueProperty($connectState) public var connectState: EasyMQTTKit.ConnectState {
+    get
+    set
+    _modify
+  }
+  public var $connectState: Combine.Published<EasyMQTTKit.ConnectState>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  @Foundation.Published @_projectedValueProperty($publishState) public var publishState: EasyMQTTKit.PublishState {
+    get
+    set
+    _modify
+  }
+  public var $publishState: Combine.Published<EasyMQTTKit.PublishState>.Publisher {
+    get
+    @available(iOS 14.0, tvOS 14.0, watchOS 7.0, OSX 11.0, *)
+    set
+  }
+  public var connectedBroker: EasyMQTTKit.MqttBroker?
+  final public let connectedPublisher: Combine.PassthroughSubject<(Swift.Bool), Swift.Never>
+  public func createMqttClient(brokerAddress: Swift.String, brokerPort: Swift.String, enableTls: Swift.Bool)
+  public func connect(username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool = false)
+  public func disconnect()
+  public func backgroundDisconnect()
+  public func publish(messageObject: EasyMQTTKit.PublishMqttMessageModel)
+  public func publishFromBackground(topic: Swift.String, payload: Swift.String, username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool, completion: @escaping (Swift.Bool) -> Swift.Void)
+  public func subscribeFromBackground(topic: Swift.String)
+  public func subscribeFromBackground(topic: Swift.String, username: Swift.String, password: Swift.String, ipAddress: Swift.String, port: Swift.String, enableTls: Swift.Bool, completion: @escaping (EasyMQTTKit.MQTTMessageModel?) -> Swift.Void)
+  public func subscribe(topic: Swift.String)
+  public func unsubscribeTo(topic: Swift.String)
+  @objc deinit
+  public typealias ObjectWillChangePublisher = Combine.ObservableObjectPublisher
+}
+extension EasyMqttClient : CocoaMQTTDelegate {
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didUnsubscribeTopic topic: Swift.String)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didReceive trust: Security.SecTrust, completionHandler: @escaping (Swift.Bool) -> Swift.Void)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didConnectAck ack: CocoaMQTTConnAck)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didStateChangeTo state: CocoaMQTTConnState)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didPublishMessage message: CocoaMQTTMessage, id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didPublishAck id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didReceiveMessage message: CocoaMQTTMessage, id: Swift.UInt16)
+  @objc dynamic public func mqtt(_ mqtt: CocoaMQTT, didSubscribeTopic topics: [Swift.String])
+  @objc dynamic public func mqttDidPing(_ mqtt: CocoaMQTT)
+  @objc dynamic public func mqttDidReceivePong(_ mqtt: CocoaMQTT)
+  @objc dynamic public func mqttDidDisconnect(_ mqtt: CocoaMQTT, withError err: Swift.Error?)
+}
+extension EasyMqttClient {
+  public func changeMessageBufferSize(to size: Swift.Int)
+}
+extension CocoaMQTTMessage {
+  convenience public init(message: EasyMQTTKit.PublishMqttMessageModel)
+}
+public struct MqttBroker : Swift.Codable, Swift.Hashable {
+  public var name: Swift.String
+  public var ip: Swift.String
+  public var port: Swift.String
+  public var username: Swift.String
+  public var password: Swift.String
+  public var enableTls: Swift.Bool
+  public init(name: Swift.String, ip: Swift.String, port: Swift.String, username: Swift.String, password: Swift.String, enableTls: Swift.Bool = false)
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: EasyMQTTKit.MqttBroker, b: EasyMQTTKit.MqttBroker) -> Swift.Bool
+}
+public enum MQTTQOS : Swift.UInt8, Swift.CustomStringConvertible {
+  case qos0
+  case qos1
+  case qos2
+  public var description: Swift.String {
+    get
+  }
+  public typealias RawValue = Swift.UInt8
+  public init?(rawValue: Swift.UInt8)
+  public var rawValue: Swift.UInt8 {
+    get
+  }
+}
+public struct MQTTMessageModel : Swift.Identifiable {
+  public var id: Foundation.UUID
+  public var qos: EasyMQTTKit.MQTTQOS
+  public var dup: Swift.Bool
+  public var topic: Swift.String
+  public var payload: Swift.String
+  public var retained: Swift.Bool
+  public var timestamp: Foundation.Date
+  public var string: Swift.String? {
+    get
+  }
+  public init(topic: Swift.String, string: Swift.String, qos: EasyMQTTKit.MQTTQOS = .qos0, retained: Swift.Bool = false, dup: Swift.Bool = false)
+  public init(message: EasyMQTTKit.PublishMqttMessageModel)
+  public typealias ID = Foundation.UUID
+}
+public struct PublishMqttMessageModel : Swift.Codable, Swift.Hashable {
+  public var topic: Swift.String
+  public var payload: Swift.String
+  public var qos: Swift.String
+  public var retain: Swift.Bool
+  public init(topic: Swift.String, payload: Swift.String, qos: Swift.String, retain: Swift.Bool)
+  public init(from decoder: Swift.Decoder) throws
+  public func encode(to encoder: Swift.Encoder) throws
+  public var hashValue: Swift.Int {
+    get
+  }
+  public func hash(into hasher: inout Swift.Hasher)
+  public static func == (a: EasyMQTTKit.PublishMqttMessageModel, b: EasyMQTTKit.PublishMqttMessageModel) -> Swift.Bool
+}
+@_hasMissingDesignatedInitializers public class Storage {
+  @objc deinit
+}
+extension EasyMQTTKit.PublishState : Swift.Equatable {}
+extension EasyMQTTKit.PublishState : Swift.Hashable {}
+extension EasyMQTTKit.ConnectState : Swift.Equatable {}
+extension EasyMQTTKit.ConnectState : Swift.Hashable {}
+extension EasyMQTTKit.MQTTQOS : Swift.Equatable {}
+extension EasyMQTTKit.MQTTQOS : Swift.Hashable {}
+extension EasyMQTTKit.MQTTQOS : Swift.RawRepresentable {}

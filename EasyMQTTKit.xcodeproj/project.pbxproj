@@ -6,6 +6,20 @@
 	objectVersion = 51;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		81C7253225D46D3600FEC0C1 /* AggregateFramework */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 81C7253525D46D3600FEC0C1 /* Build configuration list for PBXAggregateTarget "AggregateFramework" */;
+			buildPhases = (
+				81C7253925D46D5100FEC0C1 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = AggregateFramework;
+			productName = AggregateFramework;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		3784D85A36A86CE836150AE0 /* Pods_EasyMQTTKit_EasyMQTTKitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 149D15C0A8FB6EF9EB6BE844 /* Pods_EasyMQTTKit_EasyMQTTKitTests.framework */; };
 		683713FE258F34B600305CB0 /* EasyMQTTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 683713F4258F34B600305CB0 /* EasyMQTTKit.framework */; };
@@ -208,6 +222,9 @@
 					683713FC258F34B600305CB0 = {
 						CreatedOnToolsVersion = 12.2;
 					};
+					81C7253225D46D3600FEC0C1 = {
+						CreatedOnToolsVersion = 12.4;
+					};
 				};
 			};
 			buildConfigurationList = 683713EE258F34B600305CB0 /* Build configuration list for PBXProject "EasyMQTTKit" */;
@@ -225,6 +242,7 @@
 			targets = (
 				683713F3258F34B600305CB0 /* EasyMQTTKit */,
 				683713FC258F34B600305CB0 /* EasyMQTTKitTests */,
+				81C7253225D46D3600FEC0C1 /* AggregateFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -290,6 +308,23 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		81C7253925D46D5100FEC0C1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "SCHEME_NAME=\"EasyMQTTKit\"\nFRAMEWORK_NAME=\"EasyMQTTKit\"\nSIMULATOR_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphonesimulator.xcarchive\"\nDEVICE_ARCHIVE_PATH=\"${BUILD_DIR}/${CONFIGURATION}/${FRAMEWORK_NAME}-iphoneos.xcarchive\"\nOUTPUT_DIC=\"./xcframework/\"\n# Simulator xcarchieve\nxcodebuild archive \\\n  -workspace \"EasyMQTTKit.xcworkspace\" \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${SIMULATOR_ARCHIVE_PATH} \\\n  -sdk iphonesimulator \\\n  SKIP_INSTALL=NO\n# Device xcarchieve\nxcodebuild archive \\\n  -workspace \"EasyMQTTKit.xcworkspace\" \\\n  -scheme ${SCHEME_NAME} \\\n  -archivePath ${DEVICE_ARCHIVE_PATH} \\\n  -sdk iphoneos \\\n  SKIP_INSTALL=NO\n# Clean up old output directory\nrm -rf \"${OUTPUT_DIC}\"\n# Create xcframwork combine of all frameworks\nxcodebuild -create-xcframework \\\n  -framework ${SIMULATOR_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -framework ${DEVICE_ARCHIVE_PATH}/Products/Library/Frameworks/${FRAMEWORK_NAME}.framework \\\n  -output ${OUTPUT_DIC}/${FRAMEWORK_NAME}.xcframework\n";
 		};
 		D706BAF80998682914D302B0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -474,12 +509,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 3BKAAEFQ9S;
+				DEVELOPMENT_TEAM = 6Y9C574C9M;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = EasyMQTTKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -502,12 +538,13 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 3BKAAEFQ9S;
+				DEVELOPMENT_TEAM = 6Y9C574C9M;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = EasyMQTTKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -561,6 +598,24 @@
 			};
 			name = Release;
 		};
+		81C7253325D46D3600FEC0C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6Y9C574C9M;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		81C7253425D46D3600FEC0C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 6Y9C574C9M;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -587,6 +642,15 @@
 			buildConfigurations = (
 				6837140C258F34B600305CB0 /* Debug */,
 				6837140D258F34B600305CB0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		81C7253525D46D3600FEC0C1 /* Build configuration list for PBXAggregateTarget "AggregateFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				81C7253325D46D3600FEC0C1 /* Debug */,
+				81C7253425D46D3600FEC0C1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
